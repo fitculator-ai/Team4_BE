@@ -1,16 +1,6 @@
 from sqlalchemy.orm import sessionmaker,declarative_base
 from sqlalchemy import create_engine
-from decouple import AutoConfig
-
-config = AutoConfig()
-
-DB_USER = config("DB_USER")
-DB_PASSWORD = config("DB_PASSWORD")
-DB_HOST = config("DB_HOST")
-DB_PORT = config("DB_PORT", cast=int)
-DB_NAME = config("DB_NAME")
-
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+from .config import DATABASE_URL
 
 engine = create_engine(DATABASE_URL)
 
