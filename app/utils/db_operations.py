@@ -1,6 +1,6 @@
 # CRUD 함수 관리
-from models import ExerciseLog
-from schemas import ExerciseLogCreate
+from app.models import ExerciseLog
+from app.schemas import ExerciseLogCreate
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 

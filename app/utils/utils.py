@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import ExerciseLog, Exercise, User
+from app.models import ExerciseLog, Exercise, User
 from fastapi import HTTPException
 from datetime import datetime, timedelta
 

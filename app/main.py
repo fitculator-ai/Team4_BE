@@ -1,4 +1,4 @@
-from .routes import exercise_log, points, exercise, user  # routes 폴더에서 라우터 파일 import
+from app.routes import user, exercise, exercise_log, points
 from fastapi import FastAPI
 
 app = FastAPI()

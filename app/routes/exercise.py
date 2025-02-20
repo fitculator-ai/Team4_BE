@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query
-from models import ExerciseTypeEnum, Exercise
+from app.models import ExerciseTypeEnum, Exercise
 from sqlalchemy.orm import Session
-from database import get_db
+from app.database import get_db
 from typing import List
 
 router = APIRouter()
