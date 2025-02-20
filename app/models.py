@@ -1,5 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Float, Double
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Float
 from database import Base
 import enum
 
@@ -20,6 +19,7 @@ class User_detail(Base):
     __tablename__ = "user_details"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_nickname = Column(String, nullable=True)
     exercise_issue = Column(String, nullable=True)
     exercise_goal = Column(String, nullable=True)
     resting_bpm = Column(Integer, nullable=True)

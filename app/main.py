@@ -4,6 +4,6 @@ from fastapi import FastAPI
 app = FastAPI()
 
 # 라우터 등록
-app.include_router(exercise_log.router, prefix="/api/exercise-logs", tags=["Exercise_Log"])
-app.include_router(points.router, prefix="/api/points", tags=["Points"])
-app.include_router(exercise.router, prefix="/api/exercise", tags=["Exercise-List"])
+app.include_router(exercise_log.router, prefix="/api/exercise-logs", tags=["운동 기록"])
+app.include_router(exercise.router, prefix="/api/exercise", tags=["운동 리스트"])
+app.include_router(points.router, prefix="/api/points", tags=["포인트"])
