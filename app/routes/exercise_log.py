@@ -1,8 +1,8 @@
-from schemas import ExerciseLogCreate, ExerciseLogResponse, ExerciseLogUpdate, DeleteResponse, ExerciseLogView
+from app.schemas import ExerciseLogCreate, ExerciseLogResponse, ExerciseLogUpdate, DeleteResponse, ExerciseLogView
 from utils.db_operations import exercise_log_format, exercise_log_delete
 from utils.utils import get_exercise_logs,get_user_info,exercise_intensity
 from fastapi import APIRouter, Depends, HTTPException
-from models import ExerciseLog
+from app.models import ExerciseLog
 from sqlalchemy.orm import Session
 from datetime import datetime
 from database import get_db

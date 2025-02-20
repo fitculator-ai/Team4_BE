@@ -1,4 +1,4 @@
-from models import GenderEnum, DeviceEnum
+from app.models import GenderEnum
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
@@ -71,3 +71,7 @@ class DeleteResponse(BaseModel):
 # 근력운동 횟수
 class StrengthCount(BaseModel):
     count: int
+
+
+class UserLogin(BaseModel):
+    token: str

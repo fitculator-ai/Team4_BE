@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Float
-from database import Base
+from app.database import Base
 import enum
 
 # 운동 타입 ENUM
@@ -13,6 +13,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
+    token = Column(String, unique=True, nullable=False)
 
 # 유저 상세 테이블
 class User_detail(Base):
