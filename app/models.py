@@ -7,6 +7,11 @@ class ExerciseTypeEnum(enum.Enum):
     Cardio = "유산소"
     Strength = "근력"
 
+# 성별 ENUM 
+class GenderEnum(enum.Enum):
+    Male = "Male"
+    Female = "Female"
+
 # 유저 테이블(로그인 시)
 class User(Base):
     __tablename__ = "users"

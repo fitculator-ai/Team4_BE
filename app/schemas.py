@@ -49,7 +49,7 @@ class UserCreate(BaseModel):
     name: str
     birth: Optional[datetime] = None
     gender: GenderEnum
-    device: DeviceEnum
+    device: str
 
 # 유저 생성 응답값 검증 모델
 class UserResponse(UserCreate):

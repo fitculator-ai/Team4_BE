@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.models import ExerciseLog
 from sqlalchemy.orm import Session
 from datetime import datetime
-from database import get_db
+from app.database import get_db
 from typing import List
 from dateutil import tz
 
