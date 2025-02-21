@@ -1,7 +1,7 @@
-from fastapi import APIRouter
+from app.config import SECRET_KEY, ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM
 from fastapi import FastAPI, Depends, HTTPException
 from datetime import timedelta, datetime
-from app.config import SECRET_KEY, ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM
+from fastapi import APIRouter
 from jose import jwt
 
 

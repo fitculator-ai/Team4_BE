@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends
 from app.utils.utils import get_week_start_end
+from fastapi import APIRouter, Depends
 from app.schemas import UserWeeklyPoints
 from app.models import User, ExerciseLog
 from sqlalchemy.orm import Session
-from datetime import datetime
 from app.database import get_db
+from datetime import datetime
 from sqlalchemy import func
 from dateutil import tz
 
