@@ -16,15 +16,17 @@ class GenderEnum(enum.Enum):
 class User(Base):
     __tablename__ = "users"
     __table_args__ = {'schema': 'public'}
+
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
-    token = Column(String, unique=True, nullable=False)
+    token = Column(String, unique=True, nullable=True)
 
 # 유저 상세 테이블
 class User_detail(Base):
     __tablename__ = "user_details"
     __table_args__ = {'schema': 'public'}
+    
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     user_nickname = Column(String, nullable=True)
@@ -39,6 +41,7 @@ class User_detail(Base):
 # 운동 목록 테이블
 class Exercise(Base):
     __tablename__ = "exercise_list"
+    __table_args__ = {'schema': 'public'}
 
     id = Column(Integer, primary_key=True, index=True)
     exercise_name = Column(String, nullable=False)
@@ -48,6 +51,7 @@ class Exercise(Base):
 # 운동 기록 테이블
 class ExerciseLog(Base):
     __tablename__ = "exercise_logs"
+    __table_args__ = {'schema': 'public'}
 
     id = Column(Integer, primary_key=True, index=True)    
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)   # 유저 아이디 FK

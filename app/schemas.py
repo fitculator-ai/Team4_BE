@@ -68,6 +68,7 @@ class UserDetailCreate(BaseModel):
     resting_bpm: Optional[int] = None
     height: Optional[float] = None
     birth: datetime
+    device: Optional[str] = None
     profile_image: Optional[str] = None
 
     class Config:
