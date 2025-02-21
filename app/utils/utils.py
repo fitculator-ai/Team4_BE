@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app.models import ExerciseLog, Exercise, User
+from app.models import ExerciseLog, Exercise, User_detail
 from fastapi import HTTPException
 from datetime import datetime, timedelta
 
@@ -29,7 +29,7 @@ def get_exercise_logs(db: Session, user_id: int, date: datetime):
         ExerciseLog.end_at,
         ExerciseLog.exercise_intensity,
         ExerciseLog.earned_point,
-        ExerciseLog.exercise_detail,
+        ExerciseLog.exercise_note,
         Exercise.exercise_name
     )
     .order_by(ExerciseLog.end_at.desc())
@@ -46,7 +46,7 @@ def get_exercise_logs(db: Session, user_id: int, date: datetime):
         "end_at": log.end_at.isoformat(),
         "exercise_intensity": log.exercise_intensity,
         "earned_point": log.earned_point,
-        "exercise_detail": log.exercise_detail or None
+        "exercise_note": log.execise_note or None
     }
     for log, exercise_name in raw_data 
 ]
@@ -69,7 +69,7 @@ def exercise_intensity(avg_bpm, age):
     
 # 유저의 유, 무를 판단하는 로직
 def get_user_info(db: Session, user_id: int):
-    user = db.query(User).filter(User.id == user_id).first()
+    user = db.query(User_detail).filter(User_detail.user_id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="해당 유저를 찾을 수 없습니다.")
     return user

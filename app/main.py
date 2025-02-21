@@ -14,3 +14,5 @@ app.include_router(points.router, prefix="/api/points", tags=["포인트"])
 
 
 Base.metadata.create_all(bind=engine)
+
+

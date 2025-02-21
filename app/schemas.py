@@ -13,7 +13,7 @@ class ExerciseLogCreate(BaseModel):
     end_at: datetime
     earned_point: float
     exercise_intensity: Optional[str] = None  # 추가 (FastAPI에서 오류 방지)
-    exercise_detail: Optional[str] = ""  # None 
+    exercise_note: Optional[str] = ""  # None 
 
 # 운동 기록 수정 모델
 class ExerciseLogUpdate(BaseModel):
@@ -23,7 +23,7 @@ class ExerciseLogUpdate(BaseModel):
     end_at: Optional[datetime] = None
     earned_point: Optional[float] = None
     exercise_intensity: Optional[str] = None
-    exercise_detail: Optional[str] = None
+    exercise_note: Optional[str] = None
 
 # 운동 기록 조회 모델
 class ExerciseLogView(BaseModel):
@@ -35,7 +35,7 @@ class ExerciseLogView(BaseModel):
     end_at: datetime
     exercise_intensity: str
     earned_point: float
-    exercise_detail: Optional[str] = None
+    exercise_note: Optional[str] = None
 
 # 운동 기록 응답값 검증 모델
 class ExerciseLogResponse(ExerciseLogCreate):

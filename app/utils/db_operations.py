@@ -17,7 +17,7 @@ def exercise_log_format(db: Session, data: ExerciseLogCreate, intensity: str):
             end_at=data.end_at.replace(second=0, microsecond=0),
             exercise_intensity=intensity,
             earned_point=data.earned_point,
-            exercise_detail=data.exercise_detail or ""
+            exercise_note=data.exercise_note or ""
         )
 
         # 4. DB 저장
