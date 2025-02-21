@@ -9,6 +9,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+
 # DB 세션 의존성 함수
 def get_db():
     db = SessionLocal()

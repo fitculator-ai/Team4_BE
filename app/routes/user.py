@@ -4,7 +4,7 @@ from datetime import timedelta, datetime
 from app.config import SECRET_KEY, ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM
 from app.schemas import UserCreate
 from app.database import get_db
-from app.models import User
+from app.models import User,  User_detail
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from jose import jwt
@@ -19,8 +19,7 @@ def create_users(user: UserCreate, db: Session = Depends(get_db)):
 
     newbie = User(
         email=user.email,
-        name=user.name,
-        token=user.token # 재로그인 방지 - refresh token
+        name=user.name
     )
 
     db.add(newbie)
@@ -29,15 +28,28 @@ def create_users(user: UserCreate, db: Session = Depends(get_db)):
     
     return newbie
 
-
-# @router.get("/")
-# def get_user(db: Session = Depends(get_db)):
-#     # 예시로 이메일을 'ex@ex.com'으로 설정
-#     user = db.query(User).filter(User.email == 'ex@ex.com').first()
+# @router.post("/create-user-details")
+# def create_user_details(user_details: User_detail, db: Session = Depends(get_db)): 
     
-#     if user:
-#         return {"id": user.id, "name": user.name, "email": user.email}
-#     return {"message": "User not found"}
+#     new_details = User_detail(
+#         user_nickname = user_details.user_nickname,
+#         exercise_issue = user_details.exercise_issue,
+#         exercise_goal = user_details.exercise_goal,
+#         resting_bpm = user_details.resting_bpm,
+#         height = user_details.height,
+#         birth = user_details.birth,
+#         device = user_details.device,
+#         profile_image = user_details.profile_image
+#     )
+
+#     db.add(new_details)
+#     db.commit()
+#     db.refresh(new_details)
+    
+#     return new_details
+
+
+# # token=user.token # 재로그인 방지 - refresh token
 
 # def create_access_token(data: dict, expires_delta: timedelta = None):
 #     to_encode = data.copy()
@@ -50,3 +62,12 @@ def create_users(user: UserCreate, db: Session = Depends(get_db)):
 #     """임시 로그인 API - access_token 발급"""
 #     access_token = create_access_token({"sub": "test@example.com"})
 #     return {"access_token": access_token, "token_type": "bearer"}
+
+# @router.get("/")
+# def get_user(db: Session = Depends(get_db)):
+#     # 예시로 이메일을 'ex@ex.com'으로 설정
+#     user = db.query(User).filter(User.email == 'ex@ex.com').first()
+    
+#     if user:
+#         return {"id": user.id, "name": user.name, "email": user.email}
+#     return {"message": "User not found"}
