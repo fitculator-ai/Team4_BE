@@ -15,6 +15,7 @@ class GenderEnum(enum.Enum):
 # 유저 테이블(로그인 시)
 class User(Base):
     __tablename__ = "users"
+    __table_args__ = {'schema': 'public'}
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
@@ -23,6 +24,7 @@ class User(Base):
 # 유저 상세 테이블
 class User_detail(Base):
     __tablename__ = "user_details"
+    __table_args__ = {'schema': 'public'}
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     user_nickname = Column(String, nullable=True)
