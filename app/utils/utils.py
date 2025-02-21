@@ -2,6 +2,8 @@ from sqlalchemy.orm import Session
 from app.models import ExerciseLog, Exercise, User_detail
 from fastapi import HTTPException
 from datetime import datetime, timedelta
+from jose import jwt
+from decouple import config
 
 # 선택한 datetime의 월요일 일요일의 날짜를 반환하는 함수
 def get_week_start_end(target_date: datetime):
@@ -75,3 +77,10 @@ def get_user_info(db: Session, user_id: int):
     return user
 
 
+def create_access_token(data: dict, expires_delta: timedelta = None):
+    """JWT 토큰 생성"""
+    to_encode = data.copy()
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=int(config("ACCESS_TOKEN_EXPIRE_MINUTES", default = 30))))
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, config("SECRET_KEY"), algorithm=config("ALGORITHM"))
+    return encoded_jwt
