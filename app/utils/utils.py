@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
 from app.models import ExerciseLog, Exercise, User_detail
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from datetime import datetime, timedelta
-from jose import jwt
+from jose import jwt, JWTError
+
 from decouple import config
 
 # 선택한 datetime의 월요일 일요일의 날짜를 반환하는 함수
@@ -76,7 +77,7 @@ def get_user_info(db: Session, user_id: int):
         raise HTTPException(status_code=404, detail="해당 유저를 찾을 수 없습니다.")
     return user
 
-
+# 로그인 - 토큰 생성
 def create_access_token(data: dict, expires_delta: timedelta = None):
     """JWT 토큰 생성"""
     to_encode = data.copy()
@@ -84,3 +85,22 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, config("SECRET_KEY"), algorithm=config("ALGORITHM"))
     return encoded_jwt
+
+# 토큰 검증
+def get_sub_from_token(token: str):
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="토큰이 없습니다."
+        )
+    try:
+        # verify_exp=False로 만료 여부를 확인하지 않음
+        decoded_token = jwt.decode(token, config("SECRET_KEY"), algorithms=[config("ALGORITHM")], options={"verify_exp": False})
+        return decoded_token.get("sub")  # sub 값 반환    
+    except JWTError:
+        # 토큰이 유효하지 않은 경우 (예: 위조된 토큰)
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="토큰이 유호하지 않습니다."
+        )
+    
