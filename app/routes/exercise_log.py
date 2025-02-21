@@ -1,19 +1,22 @@
 from app.schemas import ExerciseLogCreate, ExerciseLogResponse, ExerciseLogUpdate, DeleteResponse, ExerciseLogView
-from app.utils.utils import get_exercise_logs,get_user_info,exercise_intensity
-from app.utils.db_operations import exercise_log_format, exercise_log_delete
+from app.utils.utils import get_exercise_logs,get_user_info,exercise_intensity, get_week_start_end
+from app.utils.db_operations import exercise_log_format, exercise_log_delete, strength_count
 from fastapi import APIRouter, Depends, HTTPException
-from app.models import ExerciseLog
+from app.models import ExerciseLog, Exercise, ExerciseTypeEnum
 from sqlalchemy.orm import Session
 from app.database import get_db
 from datetime import datetime
+from sqlalchemy import func
 from typing import List
 from dateutil import tz
+
 
 router = APIRouter()
 
 # 운동 기록 추가 API (POST /api/exercise-logs)
 @router.post("/", response_model=ExerciseLogResponse)
 def create_exercise_logs(log: ExerciseLogCreate, db: Session = Depends(get_db)):
+    """사용자의 운동 기록 추가"""
     user = get_user_info(db, log.user_id)
 
     if not user:
@@ -54,3 +57,9 @@ def update_exercise_logs(log_id: int, log_update: ExerciseLogUpdate, db: Session
 @router.delete("/{log_id}", response_model=DeleteResponse)
 def delete_exercise_logs(log_id: int, db: Session = Depends(get_db)):
     exercise_log_delete(log_id, db)
+
+@router.get("/strength/count")
+def count_strength(user_id: int, db: Session = Depends(get_db)):
+    request_time = datetime.now(tz.tzlocal())  # 요청 시간
+    count = strength_count(db, user_id, request_time)
+    return {"count": count}
