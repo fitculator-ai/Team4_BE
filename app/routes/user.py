@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from fastapi import Depends, HTTPException
 from datetime import timedelta, datetime
 from app.config import SECRET_KEY, ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM
-from app.schemas import UserCreate
+from app.schemas import UserCreate, UserDetailCreate
 from app.database import get_db
 from app.models import User,  User_detail
 from sqlalchemy.orm import Session
@@ -28,25 +28,25 @@ def create_users(user: UserCreate, db: Session = Depends(get_db)):
     
     return newbie
 
-# @router.post("/create-user-details")
-# def create_user_details(user_details: User_detail, db: Session = Depends(get_db)): 
-    
-#     new_details = User_detail(
-#         user_nickname = user_details.user_nickname,
-#         exercise_issue = user_details.exercise_issue,
-#         exercise_goal = user_details.exercise_goal,
-#         resting_bpm = user_details.resting_bpm,
-#         height = user_details.height,
-#         birth = user_details.birth,
-#         device = user_details.device,
-#         profile_image = user_details.profile_image
-#     )
+@router.post("/create-user-details")
+def create_user_details(user_details: UserDetailCreate, db: Session = Depends(get_db)): 
+    new_details = User_detail(
+        user_id = user_details.user_id,
+        user_nickname = user_details.user_nickname,
+        exercise_issue = user_details.exercise_issue,
+        exercise_goal = user_details.exercise_goal,
+        resting_bpm = user_details.resting_bpm,
+        height = user_details.height,
+        birth = user_details.birth,
+        device = user_details.device,
+        profile_image = user_details.profile_image
+    )
 
-#     db.add(new_details)
-#     db.commit()
-#     db.refresh(new_details)
+    db.add(new_details)
+    db.commit()
+    db.refresh(new_details)
     
-#     return new_details
+    return new_details
 
 
 # # token=user.token # 재로그인 방지 - refresh token

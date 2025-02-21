@@ -26,9 +26,9 @@ class User(Base):
 class User_detail(Base):
     __tablename__ = "user_details"
     __table_args__ = {'schema': 'public'}
-    
+
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("public.users.id"), nullable=False)
     user_nickname = Column(String, nullable=True)
     exercise_issue = Column(String, nullable=True)
     exercise_goal = Column(String, nullable=True)
