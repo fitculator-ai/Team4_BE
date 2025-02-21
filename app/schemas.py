@@ -15,6 +15,7 @@ class ExerciseLogCreate(BaseModel):
     exercise_intensity: Optional[str] = None  # 추가 (FastAPI에서 오류 방지)
     exercise_detail: Optional[str] = ""  # None 
 
+# 운동 기록 수정 모델
 class ExerciseLogUpdate(BaseModel):
     avg_bpm: Optional[int] = None
     max_bpm: Optional[int] = None
@@ -24,6 +25,7 @@ class ExerciseLogUpdate(BaseModel):
     exercise_intensity: Optional[str] = None
     exercise_detail: Optional[str] = None
 
+# 운동 기록 조회 모델
 class ExerciseLogView(BaseModel):
     user_id: int
     exercise_name: str

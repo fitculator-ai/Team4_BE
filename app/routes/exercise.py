@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, Query
 from app.models import ExerciseTypeEnum, Exercise
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from app.database import get_db
 from typing import List
