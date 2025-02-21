@@ -1,6 +1,7 @@
 from sqlalchemy.orm import sessionmaker,declarative_base
 from sqlalchemy import create_engine
 from app.config import DATABASE_URL
+from sqlalchemy import text
 
 engine = create_engine(DATABASE_URL)
 
@@ -15,3 +16,4 @@ def get_db():
         yield db
     finally:
         db.close()
+
