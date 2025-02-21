@@ -1,7 +1,6 @@
 from app.routes import exercise_log, points, exercise, user, mypage  # routes 폴더에서 라우터 파일 import
 from app.database import Base, engine
 from fastapi import FastAPI
-from app.database import Base, engine
 
 app = FastAPI()
 
@@ -15,5 +14,6 @@ app.include_router(points.router, prefix="/api/points", tags=["포인트"])
 
 
 Base.metadata.create_all(bind=engine)
+
 
 

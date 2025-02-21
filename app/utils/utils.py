@@ -46,7 +46,7 @@ def get_exercise_logs(db: Session, user_id: int, date: datetime):
         "end_at": log.end_at.isoformat(),
         "exercise_intensity": log.exercise_intensity,
         "earned_point": log.earned_point,
-        "exercise_note": log.execise_note or None
+        "exercise_note": log.exercise_note or None
     }
     for log, exercise_name in raw_data 
 ]

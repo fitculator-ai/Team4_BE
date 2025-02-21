@@ -54,8 +54,8 @@ class ExerciseLog(Base):
     __table_args__ = {'schema': 'public'}
 
     id = Column(Integer, primary_key=True, index=True)    
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)   # 유저 아이디 FK
-    exercise_id = Column(Integer, ForeignKey("exercise_list.id"), nullable=False)  # 운동 아이디 FK
+    user_id = Column(Integer, ForeignKey("public.users.id"), nullable=False)   # 유저 아이디 FK
+    exercise_id = Column(Integer, ForeignKey("public.exercise_list.id"), nullable=False)  # 운동 아이디 FK
     avg_bpm = Column(Integer, nullable=True)  
     duration = Column(Integer, nullable=True)  
     end_at = Column(DateTime, nullable=True)  
