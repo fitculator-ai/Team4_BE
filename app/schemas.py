@@ -49,14 +49,26 @@ class ExerciseLogResponse(ExerciseLogCreate):
 class UserCreate(BaseModel):
     email: str
     name: str
-    birth: Optional[datetime] = None
-    gender: GenderEnum
-    device: str
+    token: Optional[str] = None
 
 # 유저 생성 응답값 검증 모델
 class UserResponse(UserCreate):
     id: int
     name: str
+
+    class Config:
+        orm_mode = True
+
+# 유저 상세정보
+class UserDetailCreate(BaseModel):
+    user_id: int
+    user_nickname: Optional[str] = None
+    exercise_issue: Optional[str] = None
+    exercise_goal: Optional[str] = None
+    resting_bpm: Optional[int] = None
+    height: Optional[float] = None
+    birth: datetime
+    profile_image: Optional[str] = None
 
     class Config:
         orm_mode = True
@@ -74,6 +86,6 @@ class DeleteResponse(BaseModel):
 class StrengthCount(BaseModel):
     count: int
 
-
+# 로그인 토큰
 class UserLogin(BaseModel):
     token: str
