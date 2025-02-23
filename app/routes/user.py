@@ -1,11 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from datetime import timedelta, datetime
 from app.config import SECRET_KEY, ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM
 from app.schemas import UserCreate, UserDetailCreate
 from app.database import get_db
 from app.models import User,  User_detail
 from sqlalchemy.orm import Session
-from sqlalchemy import text
 from app.utils.utils import create_access_token
 from app.utils.utils import get_sub_from_token
 
@@ -73,7 +71,7 @@ def login(email: str, db: Session = Depends(get_db)):
     db.commit()
     return {"access_token": access_token, "token_type": "bearer"}
 
-
+# 로그아웃
 @router.post("/logout")
 def logout(email: str, db: Session = Depends(get_db)):
     """로그인 토큰이 있는 유저만 로그아웃 가능"""
