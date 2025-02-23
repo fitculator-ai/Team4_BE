@@ -1,18 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-
-
 from app.database import get_db
 from sqlalchemy.orm import Session
-from app.models import User
+from app.schemas import UserDetailUpdate
+from app.models import User, User_detail
 from app.utils.utils import get_sub_from_token
 
-# get 유저조회
-# get 피로도
-# get 운동량 기록 
-# put 프로필 수정
 
 router = APIRouter()
 
+# 유저조회
 @router.get("/get-user")
 def get_user(email: str, db: Session = Depends(get_db)):
     # 유저 존재 여부 확인
@@ -40,6 +36,29 @@ def get_user(email: str, db: Session = Depends(get_db)):
 
     return user
 
-@router.put("/edit-user")
-def edit_user(email: str, db: Session = Depends(get_db)):
-    pass
+# 유저 프로필 수정
+@router.put("/edit-user/{user_id}", response_model=UserDetailUpdate)
+def edit_user(user_id: int, user_details: UserDetailUpdate, db: Session = Depends(get_db)):
+    # 유저 존재 여부 확인
+    existing_user = db.query(User_detail).filter(User_detail.user_id == user_id).first()
+
+    if not existing_user:
+        raise HTTPException(status_code=404, detail="유저가 존재하지 않습니다")
+
+    # 입력된 필드만 업데이트
+    update_data = user_details.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(existing_user, key, value)
+
+    db.add(existing_user)
+    db.commit()
+    db.refresh(existing_user)
+
+    return existing_user
+
+# 운동량 기록 조회
+# @router.get("/get-exercise-log")
+
+
+
+# get 피로도 

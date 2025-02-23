@@ -59,9 +59,23 @@ class UserResponse(UserCreate):
     class Config:
         orm_mode = True
 
-# 유저 상세정보
+# 유저 상세정보 생성 검증 모델
 class UserDetailCreate(BaseModel):
     user_id: int
+    user_nickname: Optional[str] = None
+    exercise_issue: Optional[str] = None
+    exercise_goal: Optional[str] = None
+    resting_bpm: Optional[int] = None
+    height: Optional[float] = None
+    birth: datetime
+    device: Optional[str] = None
+    profile_image: Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
+# 유저 상세정보 수정 검증 모델
+class UserDetailUpdate(BaseModel):
     user_nickname: Optional[str] = None
     exercise_issue: Optional[str] = None
     exercise_goal: Optional[str] = None
@@ -90,3 +104,4 @@ class StrengthCount(BaseModel):
 # 로그인 토큰
 class UserLogin(BaseModel):
     token: str
+
