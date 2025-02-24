@@ -39,7 +39,7 @@ def exercise_log_format(db: Session, data: ExerciseLogCreate, intensity: str):
 
 # 운동기록 삭제 함수
 
-def exercise_log_delete(db: Session, log_id: int):
+def exercise_log_delete(log_id: int, db: Session):
     try:
         exercise_data = db.query(ExerciseLog).filter(ExerciseLog.id == log_id).first()
         db.delete(exercise_data)

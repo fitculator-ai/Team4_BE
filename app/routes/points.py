@@ -11,7 +11,7 @@ from dateutil import tz
 router = APIRouter()
 
 # 유저의 한 주간 포인트 
-@router.get("/weekly", response_model = UserWeeklyPoints)
+@router.get("/weekly", response_model = UserWeeklyPoints, summary="유저의 한 주간 포인트를 조회")
 def get_user_weekly_points(user_id: int, db: Session = Depends(get_db)):
     request_time = datetime.now(tz.tzlocal()) # 요청이 들어온 시간
     monday, sunday = get_week_start_end(request_time)

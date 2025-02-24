@@ -10,7 +10,7 @@ from app.utils.utils import get_sub_from_token
 router = APIRouter()
 
 # 유저 추가
-@router.post("/create-user")
+@router.post("/create-user", summary="유저 생성")
 def create_users(user: UserCreate, db: Session = Depends(get_db)): 
     existing_user = db.query(User).filter(User.email == user.email).first()
     if existing_user:
@@ -28,7 +28,7 @@ def create_users(user: UserCreate, db: Session = Depends(get_db)):
     return newbie
 
 # 유저 상세정보 추가
-@router.post("/create-user-details")
+@router.post("/create-user-details", summary="유저 상세 정보 생성")
 def create_user_details(user_details: UserDetailCreate, db: Session = Depends(get_db)): 
     new_details = User_detail(
         user_id = user_details.user_id,
@@ -50,7 +50,7 @@ def create_user_details(user_details: UserDetailCreate, db: Session = Depends(ge
 
 
 # 유저 로그인 - 이메일 있으면 토큰 저장
-@router.post("/login")
+@router.post("/login", summary="유저 로그인(토큰 저장)")
 def login(email: str, db: Session = Depends(get_db)):
     """이메일로 로그인 → access_token 발급"""
     user = db.query(User).filter(User.email == email).first()
@@ -72,7 +72,7 @@ def login(email: str, db: Session = Depends(get_db)):
     return {"access_token": access_token, "token_type": "bearer"}
 
 # 로그아웃
-@router.post("/logout")
+@router.post("/logout", summary="로그아웃(토큰 삭제)")
 def logout(email: str, db: Session = Depends(get_db)):
     """로그인 토큰이 있는 유저만 로그아웃 가능"""
     user = db.query(User).filter(User.email == email).first()
