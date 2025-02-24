@@ -1,6 +1,6 @@
 from app.schemas import ExerciseLogCreate, ExerciseLogResponse, ExerciseNoteUpdate, DeleteResponse, ExerciseLogView
 from app.utils.db_operations import exercise_log_format, exercise_log_delete, strength_count
-from app.utils.utils import get_exercise_logs,get_user_info,exercise_intensity
+from app.utils.utils import get_exercise_logs,get_user_info,exercise_intensity, existing_user
 from fastapi import APIRouter, Depends, HTTPException
 from app.models import ExerciseLog
 from sqlalchemy.orm import Session
@@ -32,6 +32,7 @@ def create_exercise_logs(log: ExerciseLogCreate, db: Session = Depends(get_db)):
 @router.get("/this-week", response_model=List[ExerciseLogView], summary="이번주 운동 기록들을 불러옴")
 def get_user_exercise_logs(user_id: int, db: Session = Depends(get_db)):
     request_time = datetime.now(tz.tzlocal())
+    existing_user(user_id, db)
     result = get_exercise_logs(user_id=user_id, db=db, date=request_time)
     return result
 
@@ -60,9 +61,12 @@ def delete_exercise_logs(log_id: int, db: Session = Depends(get_db)):
 
 @router.get("/strength/count", summary="이번 주 근력운동 횟수를 반환함.")
 def count_strength(user_id: int, db: Session = Depends(get_db)):
-    request_time = datetime.now(tz.tzlocal())  # 요청 시간
-    count = strength_count(db, user_id, request_time)
-    return {"count": count}
+    try:
+        request_time = datetime.now(tz.tzlocal())  # 요청 시간
+        count = strength_count(db, user_id, request_time)
+        return {"count": count}
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=f"에러 발생: {str(e)}")
 
 @router.get("/target-date", response_model=List[ExerciseLogView], summary="원하는 날짜를 입력하면 그 주(월~일)의 운동 기록을 불러옴")
 def get_target_date_exercise_log(user_id: int, target_date: datetime, db: Session = Depends(get_db)):

@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.config import SECRET_KEY, ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM
 from app.schemas import UserCreate, UserDetailCreate
-from app.database import get_db
-from app.models import User,  User_detail
-from sqlalchemy.orm import Session
 from app.utils.utils import create_access_token
 from app.utils.utils import get_sub_from_token
+from app.models import User,  User_detail
+from sqlalchemy.orm import Session
+from app.database import get_db
 
 router = APIRouter()
 

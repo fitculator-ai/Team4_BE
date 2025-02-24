@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from app.database import get_db
-from sqlalchemy.orm import Session
+from app.utils.utils import get_sub_from_token, get_last_4_weeks_exercise_logs
 from app.schemas import UserDetailUpdate, UserDetailView, WeekExerciseLogView
+from fastapi import APIRouter, Depends, HTTPException, status
 from app.models import User, User_detail, ExerciseLog
-from app.utils.utils import get_sub_from_token, get_exercise_logs, get_last_4_weeks_exercise_logs
-from typing import List
+from sqlalchemy.orm import Session
+from app.database import get_db
 from datetime import datetime
+from typing import List
 from dateutil import tz
 
 

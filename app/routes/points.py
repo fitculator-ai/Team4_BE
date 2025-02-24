@@ -1,7 +1,7 @@
 from app.utils.utils import get_week_start_end
+from app.models import User, ExerciseLog
 from fastapi import APIRouter, Depends
 from app.schemas import UserPoints
-from app.models import User, ExerciseLog
 from sqlalchemy.orm import Session
 from app.database import get_db
 from datetime import datetime

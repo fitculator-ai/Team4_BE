@@ -1,7 +1,6 @@
-from app.models import GenderEnum
+from typing import Optional, List
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional, List
 
 # 운동 기록 생성 pydantic 검증 모델
 class ExerciseLogCreate(BaseModel):

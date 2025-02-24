@@ -1,13 +1,11 @@
 # CRUD 함수 관리
 from app.models import ExerciseLog, Exercise, ExerciseTypeEnum
+from app.utils.utils import get_week_start_end
 from app.schemas import ExerciseLogCreate
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from datetime import datetime
-from app.utils.utils import get_week_start_end
 from sqlalchemy import func
-from dateutil import tz
-
 
 
 
@@ -61,6 +59,6 @@ def strength_count(db: Session, user_id: int, request_time: datetime):
             .filter(ExerciseLog.end_at.between(monday, sunday))
             .scalar() 
         )
-        return strength_count  
+        return strength_count or HTTPException(status_code=404, detail="운동 기록을 찾을 수 없습니다.")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"오류 발생: {str(e)}")  

@@ -1,8 +1,8 @@
-from sqlalchemy.orm import Session
-from app.models import ExerciseLog, Exercise, User_detail
 from app.schemas import ExerciseLogView, WeekExerciseLogView
+from app.models import ExerciseLog, Exercise, User_detail, User
 from fastapi import HTTPException, status
 from datetime import datetime, timedelta
+from sqlalchemy.orm import Session
 from jose import jwt, JWTError
 
 from decouple import config
@@ -145,3 +145,11 @@ def get_last_4_weeks_exercise_logs(db: Session, user_id: int, date: datetime):
         all_weeks_logs.append(week_data)
 
     return all_weeks_logs
+
+def existing_user(user_id: int, db: Session):
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="없는 유저입니다.")
+    else:
+        return user
