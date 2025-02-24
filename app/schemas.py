@@ -97,8 +97,9 @@ class UserDetailUpdate(BaseModel):
         orm_mode = True
 
 # 유저의 주간 포인트 총합 검증 모델
-class UserWeeklyPoints(BaseModel):
-    weekly_points: float
+class UserPoints(BaseModel):
+    range: str
+    points: float
 
 # 운동기록 삭제 검증 모델(응답값)
 class DeleteResponse(BaseModel):

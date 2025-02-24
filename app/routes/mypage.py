@@ -105,7 +105,7 @@ def put_resting_heart_rate(user_id: int, resting_bpm: int, db: Session = Depends
 # 운동량 기록 조회
 @router.get("/get-exercise-logs", response_model=List[WeekExerciseLogView], summary="지난 4주간 운동량을 조회함")
 def get_exercise_logs(user_id: int, db: Session = Depends(get_db)):
-     # 유저 상세정보  존재 여부 확인
+    # 유저 상세정보  존재 여부 확인
     existing_user = db.query(ExerciseLog).filter(ExerciseLog.user_id == user_id).first()
 
     if not existing_user:
