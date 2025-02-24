@@ -30,6 +30,13 @@ def create_users(user: UserCreate, db: Session = Depends(get_db)):
 # 유저 상세정보 추가
 @router.post("/create-user-details", summary="유저 상세 정보 생성")
 def create_user_details(user_details: UserDetailCreate, db: Session = Depends(get_db)): 
+    user = db.query(User_detail).filter(User_detail.user_id == user_details.user_id).first()
+    if user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="유저 상세정보가 존재합니다. Edit-profile을 이용하여 상세정보를 수정하십시오.",
+        )
+
     new_details = User_detail(
         user_id = user_details.user_id,
         user_nickname = user_details.user_nickname,
