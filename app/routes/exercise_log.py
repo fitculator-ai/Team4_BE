@@ -43,10 +43,9 @@ def update_exercise_logs(log_id: int, log_update: ExerciseLogUpdate, db: Session
 
     if not exercise_data:
         raise HTTPException(status_code=404, detail="운동 기록을 찾을 수 없습니다.")
-    update_data = log_update.model_dump(exclude_unset=True)
+    
+    exercise_data.exercise_note = log_update.exercise_note  
 
-    for key, value in update_data.items():
-        setattr(exercise_data, key, value)
     db.commit()
     db.refresh(exercise_data)
     

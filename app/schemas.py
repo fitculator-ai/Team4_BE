@@ -16,13 +16,7 @@ class ExerciseLogCreate(BaseModel):
     exercise_note: Optional[str] = ""  # None 
 
 # 운동 기록 수정 모델
-class ExerciseLogUpdate(BaseModel):
-    avg_bpm: Optional[int] = None
-    max_bpm: Optional[int] = None
-    duration: Optional[int] = None
-    end_at: Optional[datetime] = None
-    earned_point: Optional[float] = None
-    exercise_intensity: Optional[str] = None
+class ExerciseNoteUpdate(BaseModel):
     exercise_note: Optional[str] = None
 
 # 운동 기록 조회 모델
