@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models import ExerciseLog, Exercise, User_detail
+from app.schemas import ExerciseLogView, WeekExerciseLogView
 from fastapi import HTTPException, status
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
@@ -104,3 +105,43 @@ def get_sub_from_token(token: str):
             detail="토큰이 유호하지 않습니다."
         )
     
+# 최근 4주간 운동 기록 조회 
+def get_last_4_weeks_exercise_logs(db: Session, user_id: int, date: datetime):
+    all_weeks_logs = []
+
+    for week_offset in range(4): # 총 4주
+        target_date = date - timedelta(weeks=week_offset)
+        monday, sunday = get_week_start_end(target_date)
+
+        raw_data = (
+            db.query(ExerciseLog, Exercise.exercise_name)
+            .join(Exercise, ExerciseLog.exercise_id == Exercise.id)
+            .filter(
+                ExerciseLog.user_id == user_id,
+                ExerciseLog.end_at.between(monday, sunday)
+            )
+            .all()
+        )
+
+        week_data = WeekExerciseLogView(
+            week_start=monday.isoformat(),
+            week_end=sunday.isoformat(),
+            logs=[
+                ExerciseLogView(
+                    user_id=log.user_id,
+                    exercise_name=exercise_name,
+                    avg_bpm=log.avg_bpm,
+                    max_bpm=log.max_bpm,
+                    duration=log.duration,
+                    end_at=log.end_at,
+                    exercise_intensity=log.exercise_intensity,
+                    earned_point=log.earned_point,
+                    exercise_note=log.exercise_note if log.exercise_note else None
+                )
+                for log, exercise_name in raw_data
+            ]
+        )
+
+        all_weeks_logs.append(week_data)
+
+    return all_weeks_logs

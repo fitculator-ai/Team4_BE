@@ -48,7 +48,6 @@ class Exercise(Base):
     exercise_type = Column(Enum(ExerciseTypeEnum), nullable=False)
 
 # 운동 기록 테이블
-# 운동 기록 테이블
 class ExerciseLog(Base):
     __tablename__ = "exercise_logs"
     __table_args__ = {'schema': 'public'}

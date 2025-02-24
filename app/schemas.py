@@ -1,7 +1,7 @@
 from app.models import GenderEnum
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 # 운동 기록 생성 pydantic 검증 모델
 class ExerciseLogCreate(BaseModel):
@@ -74,6 +74,20 @@ class UserDetailCreate(BaseModel):
     class Config:
         orm_mode = True
 
+# 유저 상세정보 조회 검증 모델
+class UserDetailView(BaseModel):
+    user_id: int
+    user_nickname: str
+    exercise_issue: str
+    exercise_goal: str
+    resting_bpm: int
+    height: float
+    birth: datetime
+    device: str
+    profile_image: str
+
+
+
 # 유저 상세정보 수정 검증 모델
 class UserDetailUpdate(BaseModel):
     user_nickname: Optional[str] = None
@@ -105,3 +119,7 @@ class StrengthCount(BaseModel):
 class UserLogin(BaseModel):
     token: str
 
+class WeekExerciseLogView(BaseModel):
+    week_start: str
+    week_end: str
+    logs: List[ExerciseLogView]
