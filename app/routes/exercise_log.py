@@ -63,3 +63,11 @@ def count_strength(user_id: int, db: Session = Depends(get_db)):
     request_time = datetime.now(tz.tzlocal())  # 요청 시간
     count = strength_count(db, user_id, request_time)
     return {"count": count}
+
+@router.get("/target-date", response_model=List[ExerciseLogView])
+def get_target_date_exercise_log(user_id: int, target_date: datetime, db: Session = Depends(get_db)):
+    try:
+        result = get_exercise_logs(user_id=user_id, db=db, date=target_date)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=404, detail="정보를 찾을 수 없음")
