@@ -1,8 +1,8 @@
-from app.schemas import ExerciseLogCreate, ExerciseLogResponse, ExerciseLogUpdate, DeleteResponse, ExerciseLogView
-from app.utils.utils import get_exercise_logs,get_user_info,exercise_intensity, get_week_start_end
+from app.schemas import ExerciseLogCreate, ExerciseLogResponse, ExerciseNoteUpdate, DeleteResponse, ExerciseLogView
 from app.utils.db_operations import exercise_log_format, exercise_log_delete, strength_count
+from app.utils.utils import get_exercise_logs,get_user_info,exercise_intensity
 from fastapi import APIRouter, Depends, HTTPException
-from app.models import ExerciseLog, Exercise, ExerciseTypeEnum
+from app.models import ExerciseLog
 from sqlalchemy.orm import Session
 from app.database import get_db
 from datetime import datetime
@@ -38,7 +38,7 @@ def get_user_exercise_logs(user_id: int, db: Session = Depends(get_db)):
 
 # 운동 기록 수정 API (PATCH /api/exercise-logs/{log_id})
 @router.patch("/{log_id}")
-def update_exercise_logs(log_id: int, log_update: ExerciseLogUpdate, db: Session = Depends(get_db)):
+def update_exercise_logs(log_id: int, log_update: ExerciseNoteUpdate, db: Session = Depends(get_db)):
     exercise_data = db.query(ExerciseLog).filter(ExerciseLog.id == log_id).first()
 
     if not exercise_data:
