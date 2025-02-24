@@ -50,7 +50,7 @@ def get_user_details(user_id: int, db: Session = Depends(get_db)):
 
 
 # 유저 프로필 수정
-@router.put("/edit-user/{user_id}", response_model=UserDetailUpdate)
+@router.put("/edit-user/{user_id}", response_model=UserDetailUpdate, summary="유저의 프로필 정보를 수정함")
 def edit_user(user_id: int, user_details: UserDetailUpdate, db: Session = Depends(get_db)):
     """ 유저 상세정보 수정 필요한 값 요청가능
     """
@@ -72,7 +72,7 @@ def edit_user(user_id: int, user_details: UserDetailUpdate, db: Session = Depend
     return existing_user
 
 #유저 안정심박수 조회
-@router.get("/resting-heart-rate")
+@router.get("/resting-heart-rate", summary="유저의 안정 심박수를 조회함")
 def get_resting_heart_rate(user_id: int, db: Session = Depends(get_db)):
 
     # 유저 상세정보  존재 여부 확인
@@ -86,11 +86,11 @@ def get_resting_heart_rate(user_id: int, db: Session = Depends(get_db)):
     
 # 미설정 
 # 안정심박수 설정
-@router.put("/put-resting-heart-rate", response_model=None)
+@router.put("/put-resting-heart-rate", response_model=None, summary="유저의 안정 심박수를 수정함")
 def put_resting_heart_rate(user_id: int, resting_bpm: int, db: Session = Depends(get_db)):
     if 40 >= resting_bpm or resting_bpm >= 120:
         raise HTTPException(status_code=404, detail="40 ~ 120 사이를 입력해주세요")
-     # 유저 상세정보  존재 여부 확인
+    # 유저 상세정보  존재 여부 확인
     existing_user = db.query(User_detail).filter(User_detail.user_id == user_id).first()
 
     if not existing_user:
@@ -103,7 +103,7 @@ def put_resting_heart_rate(user_id: int, resting_bpm: int, db: Session = Depends
     return {"msg": "resting_bpm이 성공적으로 업데이트되었습니다.", "resting_bpm": existing_user.resting_bpm}
 
 # 운동량 기록 조회
-@router.get("/get-exercise-log", response_model=List[WeekExerciseLogView])
+@router.get("/get-exercise-log", response_model=List[WeekExerciseLogView], summary="지난 4주간 운동량을 조회함")
 def get_exercise_log(user_id: int, db: Session = Depends(get_db)):
      # 유저 상세정보  존재 여부 확인
     existing_user = db.query(ExerciseLog).filter(ExerciseLog.user_id == user_id).first()
