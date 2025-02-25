@@ -1,4 +1,4 @@
-from app.utils.utils import get_sub_from_token, get_last_4_weeks_exercise_logs
+from app.utils.utils import get_sub_from_token, get_last_4_weeks_exercise_logs, existing_user
 from app.schemas import UserDetailUpdate, UserDetailView, WeekExerciseLogView
 from fastapi import APIRouter, Depends, HTTPException, status
 from app.models import User, User_detail, ExerciseLog
@@ -111,7 +111,15 @@ def get_exercise_logs(user_id: int, db: Session = Depends(get_db)):
     if not existing_user:
         raise HTTPException(status_code=404, detail="유저 운동기록이 존재하지 않습니다.")
     request_time = datetime.now(tz.tzlocal())
-    result = get_last_4_weeks_exercise_logs(user_id=user_id, db=db, date=request_time)
+    result = get_last_4_weeks_exercise_logs(user_id=user_id, db=db, date=request_time, target=4)
     return result
 
-# get 피로도 
+@router.get("/get-exercise-logs/25weeks", response_model=List[WeekExerciseLogView], summary="25주간 운동량을 조회함")
+def get_exercise_logs_25weeks(user_id: int, db: Session = Depends(get_db)):
+    user = existing_user(user_id, db=db)    
+
+    if not user:
+        raise HTTPException(status_code=404, detail="유저 운동기록이 존재하지 않습니다.")
+    request_time = datetime.now(tz.tzlocal())
+    result = get_last_4_weeks_exercise_logs(user_id=user_id, db=db, date=request_time, target=25)
+    return result
