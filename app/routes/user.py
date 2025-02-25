@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.schemas import UserCreate, UserDetailCreate
+from app.schemas import UserCreate, UserDetailCreate, UserDetailView
 from app.utils.utils import create_access_token
 from app.utils.utils import get_sub_from_token
 from app.models import User,  User_detail
@@ -27,7 +27,7 @@ def create_users(user: UserCreate, db: Session = Depends(get_db)):
     return newbie
 
 # 유저 상세정보 추가
-@router.post("/create-user-details", summary="유저 상세 정보 생성")
+@router.post("/create-user-details", summary="유저 상세 정보 생성", response_model=UserDetailView)
 def create_user_details(user_details: UserDetailCreate, db: Session = Depends(get_db)): 
     user = db.query(User_detail).filter(User_detail.user_id == user_details.user_id).first()
     if user:
@@ -45,7 +45,8 @@ def create_user_details(user_details: UserDetailCreate, db: Session = Depends(ge
         height = user_details.height,
         birth = user_details.birth,
         device = user_details.device,
-        profile_image = user_details.profile_image
+        profile_image = user_details.profile_image,
+        gender = user_details.gender
     )
 
     db.add(new_details)
