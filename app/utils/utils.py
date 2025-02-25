@@ -106,10 +106,10 @@ def get_sub_from_token(token: str):
         )
     
 # 최근 4주간 운동 기록 조회 
-def get_last_4_weeks_exercise_logs(db: Session, user_id: int, date: datetime):
+def get_last_4_weeks_exercise_logs(db: Session, user_id: int, date: datetime, target: int):
     all_weeks_logs = []
 
-    for week_offset in range(4): # 총 4주
+    for week_offset in range(target): # 총 4주
         target_date = date - timedelta(weeks=week_offset)
         monday, sunday = get_week_start_end(target_date)
 
