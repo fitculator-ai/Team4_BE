@@ -52,7 +52,7 @@ def get_user_details(user_id: int, db: Session = Depends(get_db)):
 # 유저 프로필 수정
 @router.put("/edit-user/{user_id}", response_model=UserDetailUpdate, summary="유저의 프로필 정보를 수정함")
 def edit_user(user_id: int, user_details: UserDetailUpdate, db: Session = Depends(get_db)):
-    """ 유저 상세정보 수정 필요한 값 요청가능
+    """ user_id > 상세정보 수정  
     """
     # 유저 상세정보 존재 여부 확인
     existing_user = db.query(User_detail).filter(User_detail.user_id == user_id).first()

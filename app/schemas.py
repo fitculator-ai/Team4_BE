@@ -1,6 +1,7 @@
 from typing import Optional, List
 from pydantic import BaseModel
 from datetime import datetime
+from app.models import GenderEnum
 
 # 운동 기록 생성 pydantic 검증 모델
 class ExerciseLogCreate(BaseModel):
@@ -63,6 +64,7 @@ class UserDetailCreate(BaseModel):
     birth: datetime
     device: Optional[str] = None
     profile_image: Optional[str] = None
+    gender: Optional[GenderEnum] = None
 
     class Config:
         orm_mode = True
@@ -78,6 +80,7 @@ class UserDetailView(BaseModel):
     birth: datetime
     device: str
     profile_image: str
+    gender: GenderEnum
 
 
 
@@ -91,6 +94,7 @@ class UserDetailUpdate(BaseModel):
     birth: datetime
     device: Optional[str] = None
     profile_image: Optional[str] = None
+    gender: Optional[GenderEnum] = None
 
     class Config:
         orm_mode = True

@@ -2,6 +2,8 @@ from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum, Floa
 from app.database import Base
 import enum
 
+
+
 # 운동 타입 ENUM
 class ExerciseTypeEnum(enum.Enum):
     Cardio = "유산소"
@@ -37,6 +39,8 @@ class User_detail(Base):
     birth = Column(DateTime, nullable=False)
     device = Column(String, nullable=True)
     profile_image = Column(String, nullable=True)
+    gender = Column(Enum(GenderEnum), nullable=True)  
+    
 
 # 운동 목록 테이블
 class Exercise(Base):
