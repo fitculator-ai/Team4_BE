@@ -1,11 +1,17 @@
 from app.schemas import ExerciseLogView, WeekExerciseLogView
 from app.models import ExerciseLog, Exercise, User_detail, User
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, UploadFile
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from jose import jwt, JWTError
-
+from boto3 import client
 from decouple import config
+from app.config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, S3_BUCKET_NAME, AWS_REGION
+from botocore.exceptions import NoCredentialsError
+import io
+import uuid
+import magic
+from PIL import Image
 
 # 선택한 datetime의 월요일 일요일의 날짜를 반환하는 함수
 def get_week_start_end(target_date: datetime):
@@ -153,3 +159,57 @@ def existing_user(user_id: int, db: Session):
         raise HTTPException(status_code=404, detail="없는 유저입니다.")
     else:
         return user
+
+# S3 클라이언트 초기화
+s3_client = client(
+    "s3",
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name=AWS_REGION,
+)
+
+def upload_to_s3(file: io.BytesIO, file_name: str) -> None:
+    """S3에 파일 업로드 후 URL 반환"""
+    try:
+        s3_client.upload_fileobj(
+            file,
+            S3_BUCKET_NAME,
+            file_name,
+            ExtraArgs={"ContentType": "image/jpeg"},
+        )
+        file_url = f"https://{S3_BUCKET_NAME}.s3.{AWS_REGION}.amazonaws.com/{file_name}"
+        return file_url
+    except NoCredentialsError:
+        raise ValueError("AWS 인증 정보가 잘못되었습니다.")
+    
+# s3 중복이름 방지 uuid 고유 이미지이름 
+def generate_unique_filename(user_id: int, filename: str) -> str:
+    unique_id = str(uuid.uuid4())  # 고유한 UUID 생성
+    unique_filename = f"user_{user_id}_profile_{unique_id}_{filename}"
+    return unique_filename
+
+# 이미지 파일인지 확인하는 함수
+def is_image(file_content):
+    # BytesIO 객체의 길이를 명시적으로 확인
+    if isinstance(file_content, io.BytesIO):
+        file_content.seek(0, io.SEEK_END)
+        file_size = file_content.tell()
+        file_content.seek(0)
+    else:
+        raise HTTPException(status_code=400, detail="잘못된 파일 형식입니다.")
+    
+    mime = magic.Magic(mime=True)
+    file_type = mime.from_buffer(file_content.read(file_size))
+
+    # MIME 타입이 이미지가 아닐 경우 예외 처리
+    if "image" not in file_type:
+        raise HTTPException(status_code=400, detail="이미지만 업로드 가능합니다.")
+    
+    try:
+        # PIL로 파일을 실제로 열어 이미지 파일인지 확인
+        file_content.seek(0)  # 파일을 처음부터 다시 읽을 수 있도록 시퀀스를 초기화
+        Image.open(file_content)
+        return True
+    except IOError:
+        # PIL에서 이미지로 열 수 없는 경우 (비 이미지 파일)
+        raise HTTPException(status_code=400, detail="이미지만 업로드 가능합니다.")
