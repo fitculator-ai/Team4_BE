@@ -1,13 +1,13 @@
-from app.utils.utils import get_sub_from_token, get_last_4_weeks_exercise_logs, existing_user
+from app.utils.utils import get_sub_from_token, get_last_4_weeks_exercise_logs, existing_user, upload_to_s3, generate_unique_filename, is_image
 from app.schemas import UserDetailUpdate, UserDetailView, WeekExerciseLogView
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from app.models import User, User_detail, ExerciseLog
 from sqlalchemy.orm import Session
 from app.database import get_db
 from datetime import datetime
 from typing import List
-from dateutil import tz
-
+from dateutil import tz 
+import io
 
 router = APIRouter()
 
@@ -123,3 +123,26 @@ def get_exercise_logs_25weeks(user_id: int, db: Session = Depends(get_db)):
     request_time = datetime.now(tz.tzlocal())
     result = get_last_4_weeks_exercise_logs(user_id=user_id, db=db, date=request_time, target=25)
     return result
+
+# 프로필 이미지 수정
+@router.post("/edit-user/profile-image")
+async def profile_image(user_id: int, file: UploadFile = File(...), db: Session = Depends(get_db),):
+    file_content = io.BytesIO(await file.read())
+
+    # 이미지 파일인지 확인
+    is_image(file_content)
+
+    # S3에 업로드
+    file_url = upload_to_s3(file_content, file.filename)
+
+    # DB에서 유저 정보 찾기
+    user = db.query(User_detail).filter(User_detail.user_id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="유저의 상세정보가 존재하지 않습니다.")
+    
+    # DB에 이미지 URL 저장
+    user.profile_image = file_url
+    db.commit()
+    db.refresh(user)
+
+    return {"message": f"파일 {file.filename} 이 성공적으로 업로드되었습니다!"}
