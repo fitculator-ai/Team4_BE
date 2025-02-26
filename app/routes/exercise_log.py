@@ -1,32 +1,39 @@
 from app.schemas import ExerciseLogCreate, ExerciseLogResponse, ExerciseNoteUpdate, DeleteResponse, ExerciseLogView
-from app.utils.db_operations import exercise_log_format, exercise_log_delete, strength_count
 from app.utils.utils import get_exercise_logs,get_user_info,exercise_intensity, existing_user
-from fastapi import APIRouter, Depends, HTTPException
-from app.models import ExerciseLog
+from app.utils.db_operations import exercise_log_format, exercise_log_delete, strength_count
+from app.utils.slack_webhook import post_exerciselog_webhook
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
+from app.models import ExerciseLog, Exercise
 from sqlalchemy.orm import Session
 from app.database import get_db
 from datetime import datetime
 from sqlalchemy import func
 from typing import List
 from dateutil import tz
+import asyncio  # 비동기 실행을 위해 추가
+
 
 
 router = APIRouter()
 
 # 운동 기록 추가 API (POST /api/exercise-logs)
 @router.post("/", response_model=ExerciseLogResponse, summary="유저의 운동 기록을 생성함")
-def create_exercise_logs(log: ExerciseLogCreate, db: Session = Depends(get_db)):
+async def create_exercise_logs(
+    log: ExerciseLogCreate, 
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db)
+    ):
     """사용자의 운동 기록 추가"""
     user = get_user_info(db, log.user_id)
-
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
     user_age = datetime.today().year - user.birth.year
     intensity_result = exercise_intensity(log.avg_bpm, user_age)
     new_log = exercise_log_format(db, log, intensity_result)
-    return new_log
 
+    background_tasks.add_task(post_exerciselog_webhook, log.exercise_id, user.user_id, user.user_nickname, log.duration)
+
+    return new_log
 
 # 이번 주 운동 기록 확인 API (GET /api/exercise-logs/this-week)
 @router.get("/this-week", response_model=List[ExerciseLogView], summary="이번주 운동 기록들을 불러옴")
@@ -75,3 +82,4 @@ def get_target_date_exercise_log(user_id: int, target_date: datetime, db: Sessio
         return result
     except Exception as e:
         raise HTTPException(status_code=404, detail="정보를 찾을 수 없음")
+    
