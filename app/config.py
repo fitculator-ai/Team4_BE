@@ -1,7 +1,7 @@
 # 환경 변수, 설정 관리
 from decouple import config
 
- 
+
 # 데이터베이스 설정
 DB_USER = config("DB_USER")
 DB_PASSWORD = config("DB_PASSWORD")
