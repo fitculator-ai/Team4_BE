@@ -189,27 +189,12 @@ def generate_unique_filename(user_id: int, filename: str) -> str:
     return unique_filename
 
 # 이미지 파일인지 확인하는 함수
-def is_image(file_content):
-    # BytesIO 객체의 길이를 명시적으로 확인
-    if isinstance(file_content, io.BytesIO):
-        file_content.seek(0, io.SEEK_END)
-        file_size = file_content.tell()
-        file_content.seek(0)
-    else:
-        raise HTTPException(status_code=400, detail="잘못된 파일 형식입니다.")
-    
+def is_image(file_content: io.BytesIO):
+    file_content.seek(0)  # 파일 처음으로 이동
     mime = magic.Magic(mime=True)
-    file_type = mime.from_buffer(file_content.read(file_size))
-
-    # MIME 타입이 이미지가 아닐 경우 예외 처리
-    if "image" not in file_type:
+    file_type = mime.from_buffer(file_content.read(2048))  # 일부 데이터만 읽어서 확인
+    
+    if not file_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="이미지만 업로드 가능합니다.")
     
-    try:
-        # PIL로 파일을 실제로 열어 이미지 파일인지 확인
-        file_content.seek(0)  # 파일을 처음부터 다시 읽을 수 있도록 시퀀스를 초기화
-        Image.open(file_content)
-        return True
-    except IOError:
-        # PIL에서 이미지로 열 수 없는 경우 (비 이미지 파일)
-        raise HTTPException(status_code=400, detail="이미지만 업로드 가능합니다.")
+    file_content.seek(0)  # 다시 처음으로 이동
