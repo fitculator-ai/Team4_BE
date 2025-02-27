@@ -126,14 +126,16 @@ def get_exercise_logs_25weeks(user_id: int, db: Session = Depends(get_db)):
 
 # 프로필 이미지 수정
 @router.post("/edit-user/profile-image")
-async def profile_image(user_id: int, file: UploadFile = File(...), db: Session = Depends(get_db),):
-    file_content = io.BytesIO(await file.read())
+async def profile_image(user_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
+    # 파일 내용을 미리 읽어 변수에 저장
+    file_data = await file.read()
+    file_content = io.BytesIO(file_data)
 
     # 이미지 파일인지 확인
     is_image(file_content)
 
     # S3에 업로드
-    file_url = upload_to_s3(file_content, file.filename)
+    file_url = upload_to_s3(io.BytesIO(file_data), file.filename)  # 새로운 BytesIO 객체 사용
 
     # DB에서 유저 정보 찾기
     user = db.query(User_detail).filter(User_detail.user_id == user_id).first()
