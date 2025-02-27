@@ -1,16 +1,15 @@
 from app.schemas import ExerciseLogCreate, ExerciseLogResponse, ExerciseNoteUpdate, DeleteResponse, ExerciseLogView
 from app.utils.utils import get_exercise_logs,get_user_info,exercise_intensity, existing_user
 from app.utils.db_operations import exercise_log_format, exercise_log_delete, strength_count
-from app.utils.slack_webhook import post_exerciselog_webhook
+from app.utils.discord_webhook import post_exerciselog_webhook
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
-from app.models import ExerciseLog, Exercise
+from app.models import ExerciseLog
 from sqlalchemy.orm import Session
 from app.database import get_db
 from datetime import datetime
 from sqlalchemy import func
 from typing import List
 from dateutil import tz
-import asyncio  # 비동기 실행을 위해 추가
 
 
 
