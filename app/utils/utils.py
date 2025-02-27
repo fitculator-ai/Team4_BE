@@ -81,7 +81,7 @@ def exercise_intensity(avg_bpm, age):
 def get_user_info(db: Session, user_id: int):
     user = db.query(User_detail).filter(User_detail.user_id == user_id).first()
     if not user:
-        raise HTTPException(status_code=404, detail="해당 유저를 찾을 수 없습니다.")
+        raise HTTPException(status_code=404, detail="상세정보를 찾을 수 없습니다. 먼저 생성하세요")
     return user
 
 # 로그인 - 토큰 생성
