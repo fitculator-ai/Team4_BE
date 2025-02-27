@@ -25,7 +25,7 @@ async def create_exercise_logs(
     """사용자의 운동 기록 추가"""
     user = get_user_info(db, log.user_id)
     if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=404, detail="User not found")   
     user_age = datetime.today().year - user.birth.year
     intensity_result = exercise_intensity(log.avg_bpm, user_age)
     new_log = exercise_log_format(db, log, intensity_result)
